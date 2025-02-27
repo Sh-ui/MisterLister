@@ -57,6 +57,7 @@ Want to adapt MisterLister for your own file naming conventions or add features 
 - Table headers and column processing
 - Filename parsing logic
 - Configuration options
+- Etc
 
 ### 🤝 Want to Make It Better?
 Check out [CONTRIBUTING.md](CONTRIBUTING.md) for possibilities ahead! This project is ripe for expansion, and I'd love to see it grow beyond its humble beginnings. 
