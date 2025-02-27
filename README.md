@@ -1,20 +1,18 @@
 # 📝 MisterLister
 
-Welcome to MisterLister! Born from my Personal App Creation Initiative (fancy name for a hobby project 🤓), this is a clean, minimalist table editor that turns your filenames into beautifully formatted, printable lists.
+Welcome to **MisterLister**! Born from my _**P**ersonal **A**pp **C**reation **I**nitiative_ (fancy name for a hobby project 🤓), this is a clean, minimalist table editor that turns your filenames into formatted, printable lists.
 
-## 🌟 What's This All About?
+## 🎯 Purpose & Scope
 
 MisterLister started as my personal solution for a very specific need: turning Windows filenames into organized, printable lists without the usual hassles. While it's currently tailored to my particular workflow and filename formatting preferences, it's built with love and an eye toward future expansion.
 
-## 🎯 Current Scope
-
-MisterLister was created to solve a very specific problem: formatting filenames into clean, printable lists. It is not a general-purpose tool, (at the moment) it only works with filenames that follow a strict structure:
+It is not a general-purpose tool (at the moment), it only works with filenames that follow a strict structure:
 
 ```LastName FirstName DateOfBirth Item ItemDate```
 
 If your files don't match this format, the program will not function as expected. While it is tailored to my personal workflow, others may find it useful with modifications.
 
-## 🧩 Features
+## 💡 Features
 
 - Clean, distraction-free interface for working with filename lists
 - Customizable font size and row spacing for your filename displays
@@ -55,10 +53,6 @@ python -m mister_lister
 ```
 
 ## 🛠️ Make It Your Own
-
-MisterLister was designed to be customized for your specific needs. There are two main paths forward:
-
-### ⚙️ Personal Customization
 Want to adapt MisterLister for your own file naming conventions or add features specific to your workflow? Check out the [Customization Guide](CUSTOMIZATION.md) for detailed examples of how to modify:
 - Table headers and column processing
 - Filename parsing logic
@@ -120,10 +114,6 @@ These settings sync with the +/- buttons and row height controls in the main int
 - Remember window position: Save window size and location between sessions
 
 All settings are saved automatically when clicking "Save" and persist between application launches.
-
-## 🎯 Current Scope
-
-MisterLister is currently optimized for Windows and my personal file management workflow. While it might not (yet) be the one-size-fits-all solution for everyone's list-making needs, it's a labor of love that makes my computing life more enjoyable - and maybe it'll make yours better too!
 
 ## 📜 License
 
