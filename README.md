@@ -9,8 +9,8 @@ Welcome to **MisterLister**! Born from my _**P**ersonal **A**pp **C**reation **I
 MisterLister started as my personal solution for a very specific need: turning Windows filenames into organized, printable lists without the usual hassles. While it's currently tailored to my particular workflow and filename formatting preferences, it's built with love and an eye toward future expansion.
 
 It is not a general-purpose tool (at the moment), it only works with filenames that follow a strict structure:
-```
-                   *dob        *date
+```python
+# all caps needed*   dob*       date*
 LASTNAME FIRSTNAME MMDDYY ITEM MMDDYY
 ```
 
