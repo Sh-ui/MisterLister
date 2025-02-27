@@ -3,258 +3,107 @@
 MisterLister was designed with customization in mind. This guide will help you tailor the application to your specific needs by showing you where and how to modify key parts of the codebase.
 
 ## Table of Contents
-- [Modifying Table Structure](#modifying-table-structure)
-- [Customizing Filename Processing](#customizing-filename-processing)
-- [Adding Configuration Options](#adding-configuration-options)
-- [Customizing the Bottom Bar](#customizing-the-bottom-bar)
-- [Styling and UI Customization](#styling-and-ui-customization)
+- [Core File Structure](#core-file-structure)
+- [Modifying Table Behavior](#modifying-table-behavior)
+- [Customizing File Processing](#customizing-file-processing)
+- [Configuring the UI](#configuring-the-ui)
+- [Adding New Features](#adding-new-features)
 
-## Modifying Table Structure
+## Core File Structure
 
-### Changing Column Headers and Count
+Understanding these key files will help you navigate the codebase:
 
-The table structure is defined in the `process_files` method of the `FileEditor` class. To modify the column headers or number of columns, locate this code in `mister_lister/editor.py`:
+* `mister_lister/main.py` - Application entry point
+* `mister_lister/editor.py` - Core `FileEditor` class that controls most functionality
+* `mister_lister/constants.py` - Colors, styles, and other constants
+* `mister_lister/ui/bottom_bar.py` - Bottom toolbar with action buttons
+* `mister_lister/ui/widgets/buttons.py` - Button implementations
+* `mister_lister/ui/widgets/dropzone.py` - Initial file drop area
+* `mister_lister/ui/dialogs/config_dialog.py` - Configuration dialog
+* `mister_lister/ui/dialogs/config_groups.py` - Individual configuration groups
+* `mister_lister/utils/text_processing.py` - Filename parsing functions
+* `mister_lister/utils/config.py` - Configuration handling
+
+## Modifying Table Behavior
+
+### Change the Table Structure (Headers & Columns)
+
+**File:** `mister_lister/editor.py`
+
+Look for the `process_files` method in the `FileEditor` class. This method sets up the table and processes filenames:
 
 ```python
-# Initialize table headers with descriptive labels
+# Look for this section to change column headers
 self.table.setColumnCount(5)
 self.table.setHorizontalHeaderLabels([
     "lastname", "firstname", "dob", "item", "date"
 ])
 ```
 
-Change the column count and header labels to match your needs. For example, to create a 3-column table for music files:
+### Change How Files Get Processed Into Table Rows
+
+**Files to modify:**
+1. `mister_lister/editor.py` - `process_files` method 
+2. `mister_lister/utils/text_processing.py` - Parsing functions
+
+The `process_files` method calls functions from `text_processing.py` to parse filenames:
 
 ```python
-# Initialize table headers for music files
-self.table.setColumnCount(3)
-self.table.setHorizontalHeaderLabels([
-    "artist", "album", "year"
-])
-```
-
-### Modifying Row Processing
-
-The row processing logic is also in the `process_files` method. This code determines how filenames are split and displayed in the table:
-
-```python
-# Add new files to table
+# In editor.py - This shows how files are added to the table
 for file_path in files:
     row_position = self.table.rowCount()
     self.table.insertRow(row_position)
     
     filename = os.path.basename(file_path)
-    segments = split_by_type(filename)
-    if len(segments) >= 6:
-        segments = segments[:5]
-        
-    # Add segments to columns
-    for col, segment in enumerate(segments):
-        if col in [2, 4]:  # Convert dates in columns 3 and 5
-            item = QTableWidgetItem(convert_short_date(segment.strip()))
-        else:
-            item = QTableWidgetItem(segment.strip())
-        self.table.setItem(row_position, col, item)
+    segments = split_by_type(filename)  # This function is in text_processing.py
+    # ...
 ```
 
-Customize this to match your filename format. For example, to process music filenames in the format "Artist - Album (Year).mp3":
+## Customizing File Processing
+
+### Modify Filename Parsing Logic
+
+**File:** `mister_lister/utils/text_processing.py`
+
+Key functions:
+- `split_by_type()` - Splits text by character type changes
+- `convert_short_date()` - Formats dates in a specific way
+
+If you need to parse filenames differently, modify or replace the `split_by_type()` function. Make sure your changes match the column structure defined in `editor.py`.
+
+### Add New Text Processing Functions
+
+Add new helper functions in `text_processing.py` and then call them from the `process_files` method in `editor.py`.
+
+## Configuring the UI
+
+### Modify Colors and Styles
+
+**File:** `mister_lister/constants.py`
+
+This file contains all color definitions used throughout the application:
 
 ```python
-for file_path in files:
-    row_position = self.table.rowCount()
-    self.table.insertRow(row_position)
-    
-    # Extract just the filename without extension
-    filename = os.path.splitext(os.path.basename(file_path))[0]
-    
-    # Split by the standard format "Artist - Album (Year)"
-    try:
-        artist, rest = filename.split(" - ", 1)
-        album, year = rest.rsplit(" (", 1)
-        year = year.rstrip(")")
-        
-        self.table.setItem(row_position, 0, QTableWidgetItem(artist.strip()))
-        self.table.setItem(row_position, 1, QTableWidgetItem(album.strip()))
-        self.table.setItem(row_position, 2, QTableWidgetItem(year.strip()))
-    except ValueError:
-        # Fallback for non-standard formats
-        self.table.setItem(row_position, 0, QTableWidgetItem(filename))
-        self.table.setItem(row_position, 1, QTableWidgetItem(""))
-        self.table.setItem(row_position, 2, QTableWidgetItem(""))
+# Color constants used for styling
+WHITE = "#FFFFFF"
+NORMAL_TAN = "#F5F5DC"
+LIGHT_TAN = "#FAF9F6"
+# ...
 ```
 
-## Customizing Filename Processing
+Changing these values will affect all UI elements that use them.
 
-### Modifying File Parsing Logic
+### Customize the Bottom Bar
 
-The core file parsing logic is in `mister_lister/utils/text_processing.py`. The `split_by_type` function determines how filenames are broken into segments:
+**Files to modify:**
+1. `mister_lister/ui/bottom_bar.py` - Defines the button bar
+2. `mister_lister/editor.py` - Connects buttons to actions
 
-```python
-def split_by_type(s, *args):
-    """
-    Split string into segments based on character types.
-    
-    Args:
-        s (str): String to split
-        *args: Character types to use as split points (defaults to "A" and "1")
-        
-    Returns:
-        list: List of string segments
-    """
-    if not s:
-        return []
-    
-    args = args if args else ("A", "1")
-    type_filters = {unicodedata.category(char) for char in args}
-    
-    result = []
-    current_segment = s[0]
-    prev_type = unicodedata.category(s[0])
-    
-    for char in s[1:]:
-        char_type = unicodedata.category(char)
-        if not args or prev_type in type_filters:
-            if char_type != prev_type:
-                result.append(current_segment)
-                current_segment = char
-            else:
-                current_segment += char
-        else:
-            current_segment += char
-        prev_type = char_type
-    
-    result.append(current_segment)
-    return result
-```
+The bottom bar is defined in `bottom_bar.py` and contains button groups. Each button needs:
+1. Creation with an icon in `BottomBar.__init__()`
+2. Connection to an action in `FileEditor.setup_bottom_bar()`
 
-You can create your own custom parsing function for your specific filename format. For example, to parse filenames with specific delimiters:
-
-```python
-def split_by_delimiter(filename, delimiter=" - "):
-    """
-    Split filename by a specific delimiter.
-    
-    Args:
-        filename (str): Filename to split
-        delimiter (str): Delimiter to split by (default: " - ")
-        
-    Returns:
-        list: List of filename segments
-    """
-    return [segment.strip() for segment in filename.split(delimiter)]
-```
-
-### Adding New Text Processing Functions
-
-You can add new utility functions to handle specific formats. For example, to parse file creation dates:
-
-```python
-def get_file_creation_date(file_path):
-    """
-    Get file creation date in a readable format.
-    
-    Args:
-        file_path (str): Path to the file
-        
-    Returns:
-        str: Formatted creation date
-    """
-    try:
-        created = os.path.getctime(file_path)
-        date_obj = datetime.fromtimestamp(created)
-        return date_obj.strftime("%m-%d-%Y")
-    except Exception:
-        return "Unknown date"
-```
-
-## Adding Configuration Options
-
-### Adding a New Configuration Group
-
-Configuration options are organized in groups in `mister_lister/ui/dialogs/config_groups.py`. To add a new group of settings, create a new class that inherits from `ConfigGroup`:
-
-```python
-class ViewConfigGroup(ConfigGroup):
-    """View-related configuration options"""
-    
-    def setup_ui(self):
-        # Show line numbers checkbox
-        self.show_line_numbers = QCheckBox("show line numbers")
-        self.layout.addWidget(self.show_line_numbers)
-        
-        # Alternating row colors checkbox
-        self.alt_row_colors = QCheckBox("use alternating row colors")
-        self.layout.addWidget(self.alt_row_colors)
-        
-        # Column width slider
-        col_layout = QHBoxLayout()
-        col_label = QLabel("default column width")
-        self.col_width = QSlider(Qt.Orientation.Horizontal)
-        self.col_width.setRange(50, 300)
-        self.col_width.setValue(self.config.get_int('view/column_width', 100))
-        col_layout.addWidget(col_label)
-        col_layout.addWidget(self.col_width)
-        self.layout.addLayout(col_layout)
-        
-        self.load_config()
-        
-    def save_config(self):
-        """Save view configuration values"""
-        self.config.set_value('view/show_line_numbers', self.show_line_numbers.isChecked())
-        self.config.set_value('view/alt_row_colors', self.alt_row_colors.isChecked())
-        self.config.set_value('view/column_width', self.col_width.value())
-        
-    def load_config(self):
-        """Load view configuration values"""
-        self.show_line_numbers.setChecked(self.config.get_bool('view/show_line_numbers', False))
-        self.alt_row_colors.setChecked(self.config.get_bool('view/alt_row_colors', True))
-        self.col_width.setValue(self.config.get_int('view/column_width', 100))
-```
-
-### Adding the New Group to the Config Dialog
-
-Once you've created a new configuration group, add it to the main ConfigDialog in `mister_lister/ui/dialogs/config_dialog.py`:
-
-```python
-# In ConfigDialog.__init__
-# First import your new group
-from .config_groups import (
-    PrintConfigGroup, FileConfigGroup,
-    FormatConfigGroup, StartupConfigGroup,
-    ViewConfigGroup  # Add your new group to imports
-)
-
-# Then add it to the dialog
-# Create config groups
-self.format_group = FormatConfigGroup("format", self.config)
-self.print_group = PrintConfigGroup("print", self.config)
-self.file_group = FileConfigGroup("files", self.config)
-self.startup_group = StartupConfigGroup("startup", self.config)
-self.view_group = ViewConfigGroup("view", self.config)  # Add your new group
-
-# Add groups to layout
-self.layout.addWidget(self.format_group)
-self.layout.addWidget(self.print_group)
-self.layout.addWidget(self.file_group)
-self.layout.addWidget(self.startup_group)
-self.layout.addWidget(self.view_group)  # Add your new group
-
-# Don't forget to update save_and_close
-def save_and_close(self):
-    """Save all configuration values and close"""
-    self.format_group.save_config()
-    self.print_group.save_config()
-    self.file_group.save_config()
-    self.startup_group.save_config()
-    self.view_group.save_config()  # Save your new group
-    self.accept()
-```
-
-## Customizing the Bottom Bar
-
-The bottom bar contains all the main action buttons for the application. You can customize it by adding new buttons, creating new button groups, or modifying existing ones.
-
-### Available Icons
+#### Available Icons
 
 MisterLister uses the [pytablericons](https://github.com/niklashenning/pytablericons) package for its icons. When creating new buttons, you'll need to specify which icon to use. The available icons can be found in two categories:
 
@@ -278,250 +127,91 @@ chart_btn = CircleButton(OutlineIcon.CHART_BAR)
 export_btn = CircleButton(OutlineIcon.FILE_EXPORT)
 ```
 
-### Adding New Buttons to the Bottom Bar
-
-The bottom bar is defined in `mister_lister/ui/bottom_bar.py`. To add a new button, you'll need to:
-
-1. Create a new CircleButton instance with an appropriate icon from pytablericons
-2. Add it to an existing or new ButtonGroup
-3. Connect it to an action
-
-Here's how the existing buttons are created:
-
+To add a new button:
 ```python
-# Initialize buttons with consistent naming and initial states
-self.add_files_btn = CircleButton(OutlineIcon.FOLDER)
-self.add_files_btn.interactive = True  # Should be interactive by default
+# 1. In bottom_bar.py - BottomBar.__init__()
+self.new_button = CircleButton(OutlineIcon.SOME_ICON)
+self.new_button.setToolTip("My New Action")
+self.some_group.layout.addWidget(self.new_button)
 
-self.font_minus_btn = CircleButton(OutlineIcon.MINUS)
-self.font_plus_btn = CircleButton(OutlineIcon.PLUS)
-self.spacing_minus_btn = CircleButton(OutlineIcon.MINUS)
-self.spacing_plus_btn = CircleButton(OutlineIcon.PLUS)
-self.preview_btn = CircleButton(OutlineIcon.EYE)
-self.print_btn = CircleButton(OutlineIcon.PRINTER)
-self.clear_btn = CircleButton(OutlineIcon.TRASH)
-self.config_btn = CircleButton(OutlineIcon.SETTINGS)
+# 2. In editor.py - FileEditor.setup_bottom_bar()
+self.bottom_bar.new_button.clicked.connect(self.some_action)
+
+# 3. Then implement your action in FileEditor
+def some_action(self):
+    # Your action logic here
+    pass
 ```
 
-And here's how you could add a new "Export" button to the Actions group:
+### Modify Configuration Options
+
+**Files to modify:**
+1. `mister_lister/ui/dialogs/config_groups.py` - Contains setting groups
+2. `mister_lister/ui/dialogs/config_dialog.py` - Organizes groups in the dialog
+
+Each settings section is a separate class in `config_groups.py`. To add a new setting:
+
+1. Find the appropriate group (e.g., `FormatConfigGroup`)
+2. Add a new widget in the `setup_ui()` method
+3. Update `save_config()` and `load_config()` methods
+
+If you need an entirely new settings category, create a new class in `config_groups.py`, then add it to `config_dialog.py`.
+
+## Adding New Features
+
+### Add Right-Click Menu Options
+
+**File:** `mister_lister/editor.py`
+
+Look for these methods:
+- `setup_table_context_menus()` - Sets up context menus
+- `show_header_menu()` - Column header right-click menu
+- `show_cell_menu()` - Cell right-click menu
+
+### Extend Keyboard Shortcuts
+
+**File:** `mister_lister/editor.py`
+
+Find the `eventFilter()` method which handles key presses:
 
 ```python
-# Create new export button
-self.export_btn = CircleButton(OutlineIcon.DOWNLOAD)
-self.export_btn.setToolTip("Export as CSV")
-
-# Add to existing actions group
-self.actions_group.layout.addWidget(self.export_btn)
-
-# Don't forget to update set_controls_enabled method
-def set_controls_enabled(self, enabled):
-    """Enable or disable control buttons and their groups"""
-    # Update group states
-    self.font_group.set_active(enabled)
-    self.spacing_group.set_active(enabled)
-    self.actions_group.set_active(enabled)
-    
-    # Make sure add_files_btn stays interactive and properly styled
-    self.add_files_btn.interactive = True
-    self.add_files_btn.in_use = False  # Reset in_use state when disabling
-    self.add_files_btn.update_style()
-    
-    # Update all other buttons
-    for btn in [self.font_minus_btn, self.font_plus_btn, 
-               self.spacing_minus_btn, self.spacing_plus_btn,
-               self.preview_btn, self.print_btn,
-               self.clear_btn, self.export_btn]:  # Add your new button here
-        btn.interactive = enabled
-        btn.in_use = False  # Reset in_use state when disabling
-        btn.update_style()
+def eventFilter(self, source, event):
+    """Handle key events for the table"""
+    if event.type() == QEvent.Type.KeyPress:
+        if event.key() == Qt.Key.Key_A and event.modifiers() == Qt.KeyboardModifier.ControlModifier:
+            # Ctrl+A selects all cells
+            self.table.selectAll()
+            return True
+        # Add your shortcuts here
+    return super().eventFilter(source, event)
 ```
 
-### Creating a New Button Group
+### Add New UI Dialog
 
-To create an entirely new button group with new functionality, add it to the BottomBar's `__init__` method:
+1. Create a new dialog class in `mister_lister/ui/dialogs/`
+2. Import and use it in the relevant part of the application
+
+Example of launching a dialog from `editor.py`:
 
 ```python
-# Create new sorting group
-self.sorting_group = ButtonGroup("sort by")
-self.sort_name_btn = CircleButton(OutlineIcon.SORT_ASCENDING)
-self.sort_name_btn.setToolTip("Sort by Name")
-self.sort_date_btn = CircleButton(OutlineIcon.CALENDAR)
-self.sort_date_btn.setToolTip("Sort by Date")
+from mister_lister.ui.dialogs.your_new_dialog import YourNewDialog
 
-self.sorting_group.layout.addWidget(self.sort_name_btn)
-self.sorting_group.layout.addWidget(self.sort_date_btn)
-
-# Add the new group to the main layout
-# (Insert it between existing groups)
-main_layout.addWidget(self.add_files_group)
-main_layout.addStretch(1)
-main_layout.addWidget(self.sorting_group)  # Add new group here
-main_layout.addStretch(1)
-main_layout.addWidget(self.font_group)
-# ...rest of layout...
+# Later in some method
+dialog = YourNewDialog(self)
+if dialog.exec():
+    # Handle dialog response
+    pass
 ```
 
-### Connecting Buttons to Actions
+## Common Modifications Quick Reference
 
-In the main `FileEditor` class, you'll need to connect the new buttons to their actions:
+| Modification | Primary File(s) | Secondary File(s) | Notes |
+|--------------|----------------|-------------------|-------|
+| Table columns | `editor.py` | `text_processing.py` | Match parser with column count |
+| Filename parsing | `text_processing.py` | `editor.py` | Ensure segments match table columns |
+| Add button | `bottom_bar.py` | `editor.py` | Create in bottom_bar, connect in editor |
+| Add config option | `config_groups.py` | `config.py` | Update save/load methods |
+| Styling | `constants.py` | Various CSS in classes | Colors defined in constants |
+| Context menus | `editor.py` | None | Look for context menu methods |
 
-```python
-# In FileEditor.setup_bottom_bar method:
-self.bottom_bar.export_btn.clicked.connect(self.export_to_csv)
-self.bottom_bar.sort_name_btn.clicked.connect(lambda: self.sort_table(0))  # Sort by column 0 (name)
-self.bottom_bar.sort_date_btn.clicked.connect(lambda: self.sort_table(2))  # Sort by column 2 (date)
-
-# Then implement the new methods:
-def export_to_csv(self):
-    """Export table data to CSV file"""
-    filename, _ = QFileDialog.getSaveFileName(
-        self, "Export CSV", "", "CSV Files (*.csv);;All Files (*)"
-    )
-    if not filename:
-        return
-        
-    with open(filename, 'w', newline='') as csvfile:
-        writer = csv.writer(csvfile)
-        # Write headers
-        headers = []
-        for col in range(self.table.columnCount()):
-            if not self.table.isColumnHidden(col):
-                header = self.table.horizontalHeaderItem(col)
-                headers.append(header.text() if header else "")
-        writer.writerow(headers)
-        
-        # Write data
-        for row in range(self.table.rowCount()):
-            row_data = []
-            for col in range(self.table.columnCount()):
-                if not self.table.isColumnHidden(col):
-                    item = self.table.item(row, col)
-                    row_data.append(item.text() if item else "")
-            writer.writerow(row_data)
-
-def sort_table(self, column):
-    """Sort the table by the specified column"""
-    self.table.sortByColumn(column, Qt.SortOrder.AscendingOrder)
-```
-
-### Creating Custom Button Types
-
-The buttons in MisterLister are based on the `CircleButton` class found in `mister_lister/ui/widgets/buttons.py`. You can customize the appearance of buttons or create new button types by extending this class:
-
-```python
-class SquareButton(CircleButton):
-    """Square-shaped button variant for special actions"""
-    
-    def __init__(self, icon_type="", parent=None):
-        super().__init__(icon_type, parent)
-        # Override the size if needed
-        self.setFixedSize(50, 50)
-        
-    def update_style(self):
-        """Override style to use square shape instead of circular"""
-        base_color = DARKER_TAN if self._interactive else INACTIVE_TAN
-        self.update_icon(base_color)
-        
-        if self._interactive:
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background: transparent;
-                    border: none;
-                    border-radius: 5px;  # Smaller radius for square shape
-                }}
-                QPushButton:hover {{
-                    background: {HOVER_TAN};
-                }}
-                QPushButton:pressed {{
-                    background: {LIGHT_BLUE};
-                }}
-                QPushButton:disabled {{
-                    background: transparent;
-                }}
-            """)
-            self.setCursor(Qt.CursorShape.PointingHandCursor)
-        else:
-            self.setStyleSheet(f"""
-                QPushButton {{
-                    background: transparent;
-                    border: none;
-                    border-radius: 5px;
-                }}
-                QPushButton:disabled {{
-                    background: transparent;
-                }}
-            """)
-            self.setCursor(Qt.CursorShape.ArrowCursor)
-```
-
-## Styling and UI Customization
-
-### Customizing the Application's Appearance
-
-The main styling for the application is in various places, but one of the central ones is in the ConfigDialog's `_get_stylesheet` method:
-
-```python
-def _get_stylesheet(self):
-    """Get consistent dialog styling"""
-    return f"""
-        QDialog {{
-            background-color: {WHITE};
-        }}
-        QPushButton {{
-            background-color: {NORMAL_TAN};
-            border: none;
-            border-radius: 15px;
-            padding: 8px 16px;
-            color: {DARKER_TAN};
-            font-family: 'Asap';
-            font-weight: bold;
-            font-size: 13px;
-        }}
-        /* More styles... */
-    """
-```
-
-You can modify this stylesheet to change the look and feel of the dialog, and similar modifications can be made to other UI components.
-
-For global application styling, look at the `update_window_style` method in `FileEditor`:
-
-```python
-def update_window_style(self):
-    """Update the window's style"""
-    self.setStyleSheet(f"""
-        QMainWindow {{
-            background-color: {WINDOW_BG};
-        }}
-    """)
-```
-
-You can expand this to include styling for all controls in the application:
-
-```python
-def update_window_style(self):
-    """Update the window's style"""
-    self.setStyleSheet(f"""
-        QMainWindow {{
-            background-color: {WINDOW_BG};
-        }}
-        QTableWidget {{
-            background-color: #fafafa;
-            gridline-color: #e0e0e0;
-        }}
-        /* Add more global styles here */
-    """)
-```
-
-## Advanced Customizations
-
-For more advanced customizations, explore the following areas:
-
-1. **Table Context Menus**: Look at the `setup_table_context_menus`, `show_header_menu`, and `show_cell_menu` methods in `FileEditor` to customize right-click menu options.
-
-2. **Print Formatting**: Modify the `print_table` method to change how data is formatted for printing.
-
-3. **Drag and Drop Handling**: Enhance the `dragEnterEvent` and `dropEvent` methods to handle more file types or additional data formats.
-
-4. **Keyboard Shortcuts**: Expand the `eventFilter` method to add more keyboard shortcuts and actions.
-
-Remember to test your changes thoroughly, and don't hesitate to create a fork if you develop features that might be useful to others! 
+Remember that changes to one part of the application may require modifications in multiple files to maintain consistency across the UI. 

@@ -3,7 +3,6 @@
 Welcome to **MisterLister**! Born from my _**P**ersonal **A**pp **C**reation **I**nitiative_ (fancy name for a hobby project 🤓), this is a clean, minimalist table editor that turns your filenames into formatted, printable lists.
 
 ![MisterLister main interface](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_main_ui.png)
-*MisterLister's minimalist interface in action*
 
 ## 🎯 Purpose & Scope
 
@@ -78,7 +77,6 @@ MisterLister started as a personal tool, but I'm happy to see it evolve in ways 
 Simply drag and drop your files into the welcoming drop zone, or click the "Add Files" button to browse. Need more files later? No problem - you can add more at any time!
 
 ![Drop zone interface](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_dropzone_ui.png)
-*The drop zone appears when you first launch the application*
 
 ### Working with Your Data
 The table interface gives you full control:
@@ -90,10 +88,7 @@ The table interface gives you full control:
 - Select all entries with Ctrl+A
 
 ![Hide columns](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_contexthide_ui.png)
-*Right-click to open the context menu on columns for hiding and revealing*
-
-![Delete rows](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_contextmenu_ui.png)
-*Right-click options for deleting rows as well as copying to the clipboard*
+*columns can be hidden in with a right click via context menu*
 
 ### Fine-Tune the Display
 Use the bottom bar controls to make it perfect:
@@ -105,13 +100,11 @@ Use the bottom bar controls to make it perfect:
 - Access configuration options
 
 ![Bottom bar controls](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_confirmclear_ui.png)
-*The confirmation dialog appears when using the clear button*
 
 ### Print & Preview
 Before printing, use the preview button to check formatting. When you're happy with how it looks, hit print! Border styles and colors can be customized in the config menu.
 
 ![Print preview](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_preview_ui.png)
-*The print preview dialog showing how your list will appear when printed*
 
 The interface is designed to be clean and intuitive - everything you need is just a click away. Start with a simple file drop and explore the features as you need them!
 
@@ -120,7 +113,6 @@ The interface is designed to be clean and intuitive - everything you need is jus
 Access the configuration dialog to customize MisterLister to your needs:
 
 ![Configuration dialog](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_config_ui.png)
-*The configuration dialog with all customization options*
 
 ### Format Settings
 These settings sync with the +/- buttons and row height controls in the main interface:
