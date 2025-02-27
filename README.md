@@ -36,7 +36,7 @@ If your files don't match this format, the program will not function as expected
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/MisterLister.git
+git clone https://github.com/Sh-ui/MisterLister.git
 cd MisterLister
 ```
 
