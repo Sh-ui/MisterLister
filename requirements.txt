@@ -1,0 +1,5 @@
+PyQt6>=6.4.0
+pytablericons>=0.1.0
+nuitka>=1.9.7
+zstandard>=0.22.0  # For better compression with Nuitka
+ordered-set>=4.1.0  # Required by Nuitka 
