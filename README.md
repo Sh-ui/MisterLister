@@ -60,7 +60,12 @@ Want to adapt MisterLister for your own file naming conventions or add features 
 - Etc
 
 ### 🤝 Want to Make It Better?
-Check out [CONTRIBUTING.md](CONTRIBUTING.md) for possibilities ahead! This project is ripe for expansion, and I'd love to see it grow beyond its humble beginnings. 
+
+MisterLister welcomes contributions to help it evolve beyond its initial scope. If you have ideas for making it more versatile or user-friendly, check out the [Contributing Guide](CONTRIBUTING.md) before getting started.
+
+The contributing guide outlines the vision for future development and provides guidelines to ensure improvements align with the project's goals while maintaining it's principles when you fork the project.
+
+If you're interested in the project and have ideas for improvements, feel free to check out the guide. MisterLister started as a personal tool, but I'm happy to see it evolve in ways that might be useful to others too. Whether you have thoughts on theme customization, list management features, or completely different ideas - I'm open to seeing where this project could go.
 
 ## 🎮 Using MisterLister
 
