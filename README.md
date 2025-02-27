@@ -11,7 +11,7 @@ MisterLister started as my personal solution for a very specific need: turning W
 
 It is not a general-purpose tool (at the moment), it only works with filenames that follow a strict structure:
 ```
-#                  *dob        *date
+                   *dob        *date
 LASTNAME FIRSTNAME MMDDYY ITEM MMDDYY
 ```
 
@@ -89,7 +89,7 @@ The table interface gives you full control:
 - Delete rows with a right-click menu
 - Select all entries with Ctrl+A
 
-![Hide columns](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_main_ui.png)
+![Hide columns](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_contexthide_ui.png)
 *Right-click to open the context menu on columns for hiding and revealing*
 
 ![Delete rows](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_contextmenu_ui.png)
@@ -104,7 +104,7 @@ Use the bottom bar controls to make it perfect:
 - Clear all entries when you're done
 - Access configuration options
 
-![Bottom bar controls](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_confirmclear.png)
+![Bottom bar controls](https://github.com/Sh-ui/MisterLister/blob/main/assets/example_images/mister_lister_confirmclear_ui.png)
 *The confirmation dialog appears when using the clear button*
 
 ### Print & Preview
