@@ -1,4 +1,4 @@
-# 📝 MisterLister
+# ![[assets/MisterListerIcon256.png](https://github.com/Sh-ui/MisterLister/blob/main/assets/icon_sources/MisterListerIcon256.png)](https://github.com/Sh-ui/MisterLister/blob/main/assets/icon_sources/MisterListerIcon32.png) MisterLister
 
 Welcome to **MisterLister**! Born from my _**P**ersonal **A**pp **C**reation **I**nitiative_ (fancy name for a hobby project 🤓), this is a clean, minimalist table editor that turns your filenames into formatted, printable lists.
 
