@@ -60,7 +60,7 @@ pip install -r requirements.txt
 
 4. Run the application:
 ```bash
-python -m mister_lister
+python -m mister_lister.main
 ```
 
 <br>
